@@ -88,11 +88,6 @@ We will be creating 2 lambda functions.
 
 
 
-
-
-
-
-
 ## Complete code
 
 If you need help or get stuck refer to the completed code of this lesson

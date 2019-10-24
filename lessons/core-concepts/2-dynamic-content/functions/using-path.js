@@ -4,23 +4,49 @@
 
     Set the response body with the dynamic HTML. Below is a helper function. Any type of templating engine can be used.
 
-    ```js
-    const generateHtml = (name = 'there') => {
-      return `
-      <html lang="en">
-        <head>
-          <meta charset="utf-8">
-        </head>
-        <body>
-          <h1>Hi ${name}</h1>
-        </body>
-      </html>`
-    }
-    ```
+  
+   
+  
 
     Finally remember to set the headers of the response as `'Content-Type': 'text/html'` to return HTML instead of the default `json`
  */
 
+const generateHtml = (name = 'there') => {
+  return `
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+    </head>
+    <body>
+      <h1>Hi ${name}</h1>
+    </body>
+  </html>`
+}
+
 exports.handler = async (event, context) => {
-  console.log('event.path', event.path)
+  const path = event.path.replace(/\/\.netlify\/functions\/[^/]*\//, '')
+  const pathParts = (path) ? path.split('/') : []
+  const generateHtml = (name = 'there') => {
+    /** For security *always* escape output html
+      const safeValues = escapeHtml(name)
+    */
+    return `
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+      </head>
+      <body>
+        <h1>Hi ${name}</h1>
+      </body>
+    </html>`
+  }
+
+  return {
+    statusCode: 200,
+    'headers': {
+      'Cache-Control': 'no-cache',
+      'Content-Type': 'text/html',
+    },
+    'body': generateHtml(pathParts[0])
+  }
 }
